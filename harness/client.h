@@ -58,9 +58,10 @@ class QPScombo{
 
 class DQPSLookup{
     private:
-        std::queue<QPScombo*> QPStiming;
+        std::vector<QPScombo*> QPStiming;
         uint64_t startingNs; //starting time of the current QPS period
         bool started;
+        int current_index;
     public:
         DQPSLookup(std::string inputFile);
         double currentQPS();

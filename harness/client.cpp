@@ -49,7 +49,7 @@
 
 DQPSLookup::DQPSLookup(std::string inputFile)
 {
-    std::cerr << "TESTING: " << "input file is " << inputFile.c_str() << '\n';
+    // std::cerr << "TESTING: " << "input file is " << inputFile.c_str() << '\n';
     started = false;
     std::ifstream infile(inputFile.c_str());
     //take input
@@ -57,7 +57,7 @@ DQPSLookup::DQPSLookup(std::string inputFile)
     double QPS;
     while (infile >> duration >> QPS)
     {
-        QPStiming.push(new QPScombo(duration, QPS));
+        QPStiming.push_back(new QPScombo(duration, QPS));
         // std::cerr << "TESTING: " << "pushed combo " << duration << ' ' << QPS <<'\n';
     }
     if (QPStiming.empty())
@@ -65,26 +65,27 @@ DQPSLookup::DQPSLookup(std::string inputFile)
         std::cerr << "No input is read, TBENCH_QPS specified as parameter will be used\n";
     }
     startingNs = getCurNs();
+
+    current_index = 0;
 }
 
 double DQPSLookup::currentQPS()
 {
-
-    if (QPStiming.empty())
-        return -1;
-
     uint64_t currentNs = getCurNs();
-    if (currentNs - startingNs >= (QPStiming.front()->getDuration()) * 1000 * 1000 * 1000)
+    if (currentNs - startingNs >= ( QPStiming[current_index]->getDuration()) * 1000 * 1000 * 1000)
     {
-        QPStiming.pop();
-        if (QPStiming.empty())
-            return -1;
+        if(current_index == QPStiming.size()-1  )
+        {
+            current_index = 0;
+            startingNs = getCurNs();
+            return QPStiming[current_index]->getQPS();
+        }
         startingNs = getCurNs();
-        return QPStiming.front()->getQPS();
+        return QPStiming[current_index++]->getQPS();
     }
     else
     {
-        return QPStiming.front()->getQPS();
+        return QPStiming[current_index]->getQPS();
     }
 }
 
@@ -157,11 +158,6 @@ Request *Client::startReq()
     {
         double newQPS = dqpsLookup.currentQPS();
         // std::cerr << newQPS << std::endl;
-        if (newQPS == -1)
-        {
-            dqpsLookup = DQPSLookup("input.file")
-            newQPS = dqpsLookup.currentQPS();
-        }
         if (newQPS > 0 && current_qps != newQPS)
         {
 
@@ -212,7 +208,7 @@ void Client::finiReq(Response *resp)
         uint64_t qtime = sjrn - resp->svcNs;
         uint64_t genTime = req->genNs;
 
-        // std::cerr << resp->svcNs << std::endl;
+        std::cerr << sjrn << std::endl;
         queueTimes.push_back(qtime);
         svcTimes.push_back(resp->svcNs);
         sjrnTimes.push_back(sjrn);
