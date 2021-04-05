@@ -49,7 +49,7 @@
 
 DQPSLookup::DQPSLookup(std::string inputFile)
 {
-    std::cout << "TESTING: " << "input file is " << inputFile.c_str() << '\n';
+    std::cerr << "TESTING: " << "input file is " << inputFile.c_str() << '\n';
     started = false;
     std::ifstream infile(inputFile.c_str());
     //take input
@@ -58,11 +58,11 @@ DQPSLookup::DQPSLookup(std::string inputFile)
     while (infile >> duration >> QPS)
     {
         QPStiming.push(new QPScombo(duration, QPS));
-        std::cout << "TESTING: " << "pushed combo " << duration << ' ' << QPS <<'\n';
+        // std::cerr << "TESTING: " << "pushed combo " << duration << ' ' << QPS <<'\n';
     }
     if (QPStiming.empty())
     {
-        std::cerr << "No input is read, TbENCH_QPS specified as parameter will be used\n";
+        std::cerr << "No input is read, TBENCH_QPS specified as parameter will be used\n";
     }
     startingNs = getCurNs();
 }
@@ -156,6 +156,12 @@ Request *Client::startReq()
     if (status == ROI)
     {
         double newQPS = dqpsLookup.currentQPS();
+        // std::cerr << newQPS << std::endl;
+        if (newQPS == -1)
+        {
+            dqpsLookup = DQPSLookup("input.file")
+            newQPS = dqpsLookup.currentQPS();
+        }
         if (newQPS > 0 && current_qps != newQPS)
         {
 
@@ -206,25 +212,13 @@ void Client::finiReq(Response *resp)
         uint64_t qtime = sjrn - resp->svcNs;
         uint64_t genTime = req->genNs;
 
-        std::cerr << resp->svcNs << std::endl;
+        // std::cerr << resp->svcNs << std::endl;
         queueTimes.push_back(qtime);
         svcTimes.push_back(resp->svcNs);
         sjrnTimes.push_back(sjrn);
         startTimes.push_back(resp->startNs);
         recvIds.push_back(resp->id);
         genTimes.push_back(genTime);
-
-#ifdef PER_REQ_MONITOR
-        sktWrites.push_back(resp->bytesWritten);
-        sktReads.push_back(resp->bytesRead);
-        retiredInstrs.push_back(resp->instr);
-        L3Misses.push_back(resp->L3MissNum);
-        L3HitRates.push_back(resp->L3HitRate);
-        serverTimes.push_back(resp->serverNs);
-        serverArrivalTimes.push_back(resp->arrvNs);
-        coreIds.push_back(resp->coreId);
-#endif
-        //std::cout << "TESTING: " << "finiReq recorded time for id " << resp->id << '\n';
     }
 
     delete req;
@@ -251,77 +245,19 @@ void Client::startRoi()
     pthread_mutex_unlock(&lock);
 }
 
-void Client::dumpStats()
-{
-
-    if (dumped)
-        return;
+void Client::dumpStats() {
     std::ofstream out("lats.bin", std::ios::out | std::ios::binary);
-    int reqs = svcTimes.size();
-    std::cerr << "generating lats.bin with req number " << reqs << std::endl;
-    for (int r = 0; r < reqs; ++r)
-    {
+    int reqs = sjrnTimes.size();
 
-        out << queueTimes[r];
-        out << ' ';
-        out << svcTimes[r];
-        out << '\n';
+    for (int r = 0; r < reqs; ++r) {
+        out.write(reinterpret_cast<const char*>(&queueTimes[r]), 
+                    sizeof(queueTimes[r]));
+        out.write(reinterpret_cast<const char*>(&svcTimes[r]), 
+                    sizeof(svcTimes[r]));
+        out.write(reinterpret_cast<const char*>(&sjrnTimes[r]), 
+                    sizeof(sjrnTimes[r]));
     }
     out.close();
-    dumped = true;
-}
-
-void Client::dumpAllStats()
-{
-    // std::cout << "TESTING: " << "dumping all stats" << '\n';
-    pthread_mutex_lock(&lock);
-    if (dumped == true)
-    {
-        std::cout << "[Client] dumpAllStats(): Stats already dumped\n";
-        pthread_mutex_unlock(&lock);
-        return;
-    }
-
-    std::ofstream out("lats.bin", std::ios::out | std::ios::binary);
-
-    int reqs = recvIds.size();
-    for (int r = 0; r < reqs; ++r)
-    {
-        out << recvIds[r];
-        out << ' ';
-        out << genTimes[r];
-        out << ' ';
-        out << queueTimes[r];
-        out << ' ';
-        out << svcTimes[r];
-        out << ' ';
-        //        out << sjrnTimes[r];
-        //	    out << ' ';
-        //	    out << startTimes[r];
-        //        out << ' ';
-#ifdef PER_REQ_MONITOR
-        out << retiredInstrs[r];
-        out << ' ';
-        out << sktReads[r];
-        out << ' ';
-        out << sktWrites[r];
-        out << ' ';
-        out << L3Misses[r];
-        out << ' ';
-        out << L3HitRates[r];
-        out << ' ';
-        out << serverTimes[r];
-        out << ' ';
-        out << serverArrivalTimes[r];
-        out << ' ';
-        out << coreIds[r];
-#endif
-        out << '\n';
-    }
-    out.close();
-    dumped = true;
-    std::cout << "[Client] All stats dumped\n";
-    pthread_mutex_unlock(&lock);
 }
 
 /*******************************************************************************

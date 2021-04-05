@@ -21,6 +21,26 @@ DQPSLookup::DQPSLookup(std::string inputFile){
 	startingNs = getCurNs();
 }
 
+DQPSLookup::refill(std::string inputFile)
+{
+    std::cerr << "TESTING: " << "input file is " << inputFile.c_str() << '\n';
+    started = false;
+    std::ifstream infile(inputFile.c_str());
+    //take input
+    uint64_t duration;
+    double QPS;
+    while (infile >> duration >> QPS)
+    {
+        QPStiming.push(new QPScombo(duration, QPS));
+        // std::cerr << "TESTING: " << "pushed combo " << duration << ' ' << QPS <<'\n';
+    }
+    if (QPStiming.empty())
+    {
+        std::cerr << "No input is read, TBENCH_QPS specified as parameter will be used\n";
+    }
+    startingNs = getCurNs();
+}
+
 double DQPSLookup::currentQPS(){
 	
 	if(QPStiming.empty())

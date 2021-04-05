@@ -49,6 +49,11 @@ IntegratedServer::IntegratedServer(int nthreads)
 
 size_t IntegratedServer::recvReq(int id, void** data) {
     Request* req = Client::startReq();
+    if(req == NULL)
+    {
+        Client::dumpStats();
+        syscall(SYS_exit_group, 0);
+    }
     *data = reinterpret_cast<void*>(&req->data);
     uint64_t curNs = getCurNs();
     reqInfo[id].id = req->id;

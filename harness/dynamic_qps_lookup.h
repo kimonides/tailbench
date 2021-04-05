@@ -28,6 +28,7 @@ class DQPSLookup{
 		bool started;
 	public:
 		DQPSLookup(std::string inputFile);
+		void refill(std::string inputFile);
 		double currentQPS();
 		void setStartingNs();
 };
