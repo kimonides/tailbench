@@ -36,6 +36,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <cmath>
 
 #include <fstream>
 #include <time.h>
@@ -78,10 +79,14 @@ double DQPSLookup::currentQPS()
         {
             current_index = 0;
             startingNs = getCurNs();
-            return QPStiming[current_index]->getQPS();
+            std::cout << "RPS:" << QPStiming[current_index]->getQPS() << std::endl;
+            std::cerr << "RPS:" << QPStiming[current_index]->getQPS() << std::endl;
+	    return QPStiming[current_index]->getQPS();
         }
         startingNs = getCurNs();
-        return QPStiming[current_index++]->getQPS();
+	    std::cout << "RPS:" << QPStiming[current_index]->getQPS() << std::endl;
+        std::cerr << "RPS:" << QPStiming[current_index]->getQPS() << std::endl;
+	return QPStiming[current_index++]->getQPS();
     }
     else
     {
@@ -109,9 +114,12 @@ Client::Client(int _nthreads) : dqpsLookup("input.test")
     pthread_mutex_init(&lock, nullptr);
     pthread_barrier_init(&barrier, nullptr, nthreads);
 
-    minSleepNs = getOpt("TBENCH_MINSLEEPNS", 0);
-    seed = getOpt("TBENCH_RANDSEED", 0);
+    // minSleepNs = getOpt("TBENCH_MINSLEEPNS", 0);
+    minSleepNs = 0;
+    // seed = getOpt("TBENCH_RANDSEED", 0);
+    seed = 0;
     current_qps = getOpt<double>("TBENCH_QPS", 500.0);
+    // current_qps = (double)500.0;
     lambda = current_qps * 1e-9;
 
     //QPSSequence.push(getOpt<double>("TBENCH_QPS", 1000.0));
@@ -135,7 +143,6 @@ Request *Client::startReq()
         pthread_barrier_wait(&barrier); // Wait for all threads to start up
 
         pthread_mutex_lock(&lock);
-
         if (!dist)
         {
 
@@ -160,8 +167,9 @@ Request *Client::startReq()
         // std::cerr << newQPS << std::endl;
         if (newQPS > 0 && current_qps != newQPS)
         {
-
             current_qps = newQPS;
+	    //std::cout << "RPS:" << current_qps << std::endl;
+	    //std::cerr << "RPS:" << current_qps << std::endl;
             lambda = current_qps * 1e-9;
             delete dist;
             uint64_t curNs = getCurNs();
@@ -208,13 +216,14 @@ void Client::finiReq(Response *resp)
         uint64_t qtime = sjrn - resp->svcNs;
         uint64_t genTime = req->genNs;
 
-        std::cerr << sjrn << std::endl;
-        queueTimes.push_back(qtime);
-        svcTimes.push_back(resp->svcNs);
-        sjrnTimes.push_back(sjrn);
-        startTimes.push_back(resp->startNs);
-        recvIds.push_back(resp->id);
-        genTimes.push_back(genTime);
+        // std::cerr << sjrn << "," << qtime << "," << resp->svcNs << std::endl;
+        std::cout << sjrn << std::endl;
+	//queueTimes.push_back(qtime);
+        //svcTimes.push_back(resp->svcNs);
+        //sjrnTimes.push_back(sjrn);
+        //startTimes.push_back(resp->startNs);
+        //recvIds.push_back(resp->id);
+        //genTimes.push_back(genTime);
     }
 
     delete req;

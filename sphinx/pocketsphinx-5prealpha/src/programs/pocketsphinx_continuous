@@ -37,7 +37,7 @@ relink_command=""
 if test "$libtool_install_magic" = "%%%MAGIC variable%%%"; then
   # install mode needs the following variables:
   generated_by_libtool_version='2.4.2'
-  notinst_deplibs=' ../../src/libpocketsphinx/libpocketsphinx.la /tailbench-v0.9/sphinx/pocketsphinx-5prealpha/../sphinxbase-5prealpha/src/libsphinxad/libsphinxad.la /tailbench-v0.9/sphinx/sphinxbase-5prealpha/src/libsphinxbase/libsphinxbase.la /tailbench-v0.9/sphinx/pocketsphinx-5prealpha/../sphinxbase-5prealpha/src/libsphinxbase/libsphinxbase.la'
+  notinst_deplibs=' ../../src/libpocketsphinx/libpocketsphinx.la /home/akimon/tailbench_latest_latest/tailbenchQPS/sphinx/pocketsphinx-5prealpha/../sphinxbase-5prealpha/src/libsphinxad/libsphinxad.la /home/akimon/tailbench_latest_latest/tailbenchQPS/sphinx/sphinxbase-5prealpha/src/libsphinxbase/libsphinxbase.la /home/akimon/tailbench_latest_latest/tailbenchQPS/sphinx/pocketsphinx-5prealpha/../sphinxbase-5prealpha/src/libsphinxbase/libsphinxbase.la'
 else
   # When we are sourced in execute mode, $file and $ECHO are already set.
   if test "$libtool_execute_magic" != "%%%MAGIC variable%%%"; then
@@ -188,7 +188,7 @@ func_exec_program ()
 
   if test -f "$progdir/$program"; then
     # Add our own library path to LD_LIBRARY_PATH
-    LD_LIBRARY_PATH="/tailbench-v0.9/sphinx/pocketsphinx-5prealpha/src/libpocketsphinx/.libs:/tailbench-v0.9/sphinx/pocketsphinx-5prealpha/../sphinxbase-5prealpha/src/libsphinxad/.libs:/tailbench-v0.9/sphinx/sphinxbase-5prealpha/src/libsphinxbase/.libs:/tailbench-v0.9/sphinx/pocketsphinx-5prealpha/../sphinxbase-5prealpha/src/libsphinxbase/.libs:$LD_LIBRARY_PATH"
+    LD_LIBRARY_PATH="/home/akimon/tailbench_latest_latest/tailbenchQPS/sphinx/pocketsphinx-5prealpha/src/libpocketsphinx/.libs:/home/akimon/tailbench_latest_latest/tailbenchQPS/sphinx/pocketsphinx-5prealpha/../sphinxbase-5prealpha/src/libsphinxad/.libs:/home/akimon/tailbench_latest_latest/tailbenchQPS/sphinx/sphinxbase-5prealpha/src/libsphinxbase/.libs:/home/akimon/tailbench_latest_latest/tailbenchQPS/sphinx/pocketsphinx-5prealpha/../sphinxbase-5prealpha/src/libsphinxbase/.libs:$LD_LIBRARY_PATH"
 
     # Some systems cannot cope with colon-terminated LD_LIBRARY_PATH
     # The second colon is a workaround for a bug in BeOS R4 sed

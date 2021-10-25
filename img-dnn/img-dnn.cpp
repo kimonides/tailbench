@@ -182,28 +182,37 @@ main(int argc, char** argv)
     int maxReqs = 6000; // Full MNIST test dataset
     int nThreads = 1;
 
+    cout.flush();
+    // cout << "HELLO WORLD" << endl;
+
     int c;
-    while ((c = getopt(argc, argv, "f:n:r:h")) != -1) {
-        switch(c) {
-            case 'f':
-                modelFile = optarg;
-                break;
-            case 'n':
-                maxReqs = atoi(optarg);
-                break;
-            case 'r':
-                nThreads = atoi(optarg);
-                break;
-            case 'h':
-                printHelp(argv);
-                return 0;
-                break;
-            case '?':
-                printHelp(argv);
-                return -1;
-                break;
-        }
-    }
+    modelFile = "/home/akimon/inputs/tailbench.inputs/img-dnn/models/model.xml";
+    maxReqs = 100000000;
+    nThreads = 24;
+
+    // while ((c = getopt(argc, argv, "f:n:r:h")) != -1) {
+    //     switch(c) {
+    //         case 'f':
+    //             modelFile = optarg;
+    //             break;
+    //         case 'n':
+    //             maxReqs = atoi(optarg);
+    //             break;
+    //         case 'r':
+    //             nThreads = atoi(optarg);
+    //             break;
+    //         case 'h':
+    //             printHelp(argv);
+    //             return 0;
+    //             break;
+    //         case '?':
+    //             printHelp(argv);
+    //             return -1;
+    //             break;
+    //     }
+    // }
+
+    // cout << "HELLO WORLD" << endl;
 
     long start, end;
     start = clock();

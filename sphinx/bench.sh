@@ -1,4 +1,4 @@
-for i in {1..30};
+for i in {500..1500..100};
 do
     echo "Iteration $i"
     TBENCH_QPS=$i ./run.sh

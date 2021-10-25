@@ -23,13 +23,13 @@
 /* #undef HAVE_LIBASOUND */
 
 /* Define to 1 if you have the `blas' library (-lblas). */
-/* #undef HAVE_LIBBLAS */
+#define HAVE_LIBBLAS 1
 
 /* Define to 1 if you have the `jack' library (-ljack). */
 /* #undef HAVE_LIBJACK */
 
 /* Define to 1 if you have the `lapack' library (-llapack). */
-/* #undef HAVE_LIBLAPACK */
+#define HAVE_LIBLAPACK 1
 
 /* Define to 1 if you have the `m' library (-lm). */
 #define HAVE_LIBM 1
@@ -85,8 +85,7 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
 #define LT_OBJDIR ".libs/"
 
 /* Define to the address where bug reports for this package should be sent. */

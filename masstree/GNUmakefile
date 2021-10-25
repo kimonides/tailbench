@@ -1,6 +1,6 @@
 AR = ar
 CC = gcc
-CXX = g++ -std=gnu++0x
+CXX = g++
 TBENCHDIR= ../harness
 CFLAGS = -g -W -Wall -O2 -I$(TBENCHDIR)
 DEPSDIR := .deps
@@ -17,7 +17,7 @@ endif
 ifneq ($(strip $(NOSUPERPAGE)), )
   CFLAGS += -DNOSUPERPAGE
 endif
-LIBS =  -lpthread -lm -lrt
+LIBS = -lnuma  -lpthread -lm -lrt
 LDFLAGS = 
 
 INCDEPS = $(TBENCHDIR)/tbench_client.h $(TBENCHDIR)/tbench_server.h

@@ -57,8 +57,7 @@ void Server::processRequest() {
     size_t len = tBenchRecvReq(&termPtr);
     memcpy(reinterpret_cast<void*>(term), termPtr, len);
     term[len] = '\0';
-    tBench_deleteReq();
-    //std::cerr << "reach here ! " << std::endl;
+
     unsigned int flags = Xapian::QueryParser::FLAG_DEFAULT;
     Xapian::Query query = parser.parse_query(term, flags);
     enquire.set_query(query);
@@ -78,7 +77,7 @@ void Server::processRequest() {
 
         if (++doccount == MAX_DOC_COUNT) break;
     }
-    //std::cerr << "reach here finish processing" <<std::endl;
+
     tBenchSendResp(reinterpret_cast<void*>(res), resLen);
 }
 

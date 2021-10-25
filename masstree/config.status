@@ -433,7 +433,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/yl408/tailbench-v0.9/masstree'
+ac_pwd='/home/akimon/tailbench_latest_latest/tailbenchQPS/masstree'
 srcdir='.'
 test -n "$AWK" || AWK=awk
 # The default lists apply if the user does not specify any file.
@@ -608,7 +608,7 @@ S["GREP"]="/bin/grep"
 S["CXXCPP"]="g++ -E"
 S["ac_ct_CXX"]="g++"
 S["CXXFLAGS"]="-g -O2"
-S["CXX"]="g++ -std=gnu++0x"
+S["CXX"]="g++"
 S["OBJEXT"]="o"
 S["EXEEXT"]=""
 S["ac_ct_CC"]="gcc"
@@ -620,7 +620,7 @@ S["ac_configure_args"]=" '--disable-assertions' '--with-malloc=tcmalloc'"
 S["target_alias"]=""
 S["host_alias"]=""
 S["build_alias"]=""
-S["LIBS"]=""
+S["LIBS"]="-lnuma "
 S["ECHO_T"]=""
 S["ECHO_N"]="-n"
 S["ECHO_C"]=""
@@ -715,6 +715,8 @@ D["HAVE_STDINT_H"]=" 1"
 D["HAVE_UNISTD_H"]=" 1"
 D["ENDIAN_LITTLE"]=" 1"
 D["HAVE_SYS_EPOLL_H"]=" 1"
+D["HAVE_NUMA_H"]=" 1"
+D["HAVE_LIBNUMA"]=" 1"
 D["HAVE___BUILTIN_CLZ"]=" 1"
 D["HAVE___BUILTIN_CLZL"]=" 1"
 D["HAVE___BUILTIN_CLZLL"]=" 1"
@@ -744,6 +746,7 @@ D["HAVE_CXX_RVALUE_REFERENCES"]=" 1"
 D["HAVE_CXX_TEMPLATE_ALIAS"]=" 1"
 D["HAVE_TYPE_TRAITS"]=" 1"
 D["HAVE___HAS_TRIVIAL_COPY"]=" 1"
+D["HAVE_STD_IS_TRIVIALLY_COPYABLE"]=" 1"
 D["HAVE_STD_IS_RVALUE_REFERENCE"]=" 1"
 D["HAVE_TCMALLOC"]=" 1"
 D["HAVE_OFF_T_IS_LONG"]=" 1"

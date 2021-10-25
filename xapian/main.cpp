@@ -56,14 +56,9 @@ int main(int argc, char* argv[]) {
                 break;
         }
     }
-    
-    cpu_set_t cpuset;
-    CPU_ZERO(&cpuset);
-    CPU_SET(2,&cpuset);
-    pthread_t thread = pthread_self();
-    int s = pthread_setaffinity_np(thread,sizeof(cpu_set_t),&cpuset);
+
     tBenchServerInit(numServers);
-    // tBenchSetup_thread();
+
     Server::init(numReqsToProcess, numServers);
     Server** servers = new Server* [numServers];
     for (unsigned i = 0; i < numServers; i++)
@@ -78,14 +73,12 @@ int main(int argc, char* argv[]) {
     }
     
     Server::run(servers[numServers - 1]);
-    
-    tBench_join();
+
     if (numServers > 1) {
         for (unsigned i = 0; i < numServers - 1; i++)
             pthread_join(threads[i], NULL);
     }
-    
-    
+
     tBenchServerFinish();
 
     for (unsigned i = 0; i < numServers; i++)
